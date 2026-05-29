@@ -1,0 +1,47 @@
+[user]
+	name = Your Name
+	email = your@email.com
+
+[core]
+	editor = nvim
+	pager = delta
+	autocrlf = input
+
+[delta]
+	navigate = true
+	light = false
+	side-by-side = true
+	line-numbers = true
+
+[interactive]
+	diffFilter = delta --color-only
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+
+[pull]
+	rebase = true
+
+[push]
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[init]
+	defaultBranch = main
+
+[rebase]
+	autoStash = true
+
+[alias]
+	st  = status
+	co  = checkout
+	br  = branch
+	lg  = log --oneline --graph --decorate --all
+	undo = reset HEAD~1 --mixed
+	wip = commit -am "wip"
+	aliases = config --get-regexp alias

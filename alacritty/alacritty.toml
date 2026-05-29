@@ -1,0 +1,60 @@
+[env]
+TERM = "xterm-256color"
+
+[window]
+padding = { x = 14, y = 14 }
+decorations = "buttonless"
+opacity = 0.95
+blur = true
+
+[scrolling]
+history = 10000
+
+[font]
+normal = { family = "MesloLGS Nerd Font", style = "Regular" }
+bold   = { family = "MesloLGS Nerd Font", style = "Bold" }
+italic = { family = "MesloLGS Nerd Font", style = "Italic" }
+size = 13.5
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 500
+
+# Catppuccin Mocha
+[colors.primary]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+
+[colors.cursor]
+text   = "#1e1e2e"
+cursor = "#f5e0dc"
+
+[colors.normal]
+black   = "#45475a"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#94e2d5"
+white   = "#bac2de"
+
+[colors.bright]
+black   = "#585b70"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#94e2d5"
+white   = "#a6adc8"
+
+[[keyboard.bindings]]
+key = "N"
+mods = "Command"
+action = "CreateNewWindow"
+
+[[keyboard.bindings]]
+key = "F"
+mods = "Command|Shift"
+action = "SearchForward"
