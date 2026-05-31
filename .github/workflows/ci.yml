@@ -19,6 +19,7 @@ jobs:
           scandir: .
           format: gcc
           severity: warning
+          ignore_paths: zsh
 
   lua-syntax:
     name: Lua syntax

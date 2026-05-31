@@ -39,7 +39,7 @@ if ! command -v brew &>/dev/null; then
     die "Homebrew not found. Install it first: https://docs.brew.sh/Homebrew-on-Linux"
   fi
 fi
-brew bundle --file="$DOTFILES/Brewfile" --no-lock
+brew bundle --file="$DOTFILES/Brewfile"
 ok "Packages installed"
 
 # ── Linux: fonts ─────────────────────────────────────────────────────────────

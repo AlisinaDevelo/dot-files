@@ -19,7 +19,7 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install from Brewfile
-        run: brew bundle install --no-lock --no-upgrade
+        run: brew bundle install --no-upgrade
 
       - name: Verify symlinks can be created
         run: |
@@ -52,7 +52,7 @@ jobs:
           echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> "$GITHUB_ENV"
 
       - name: Install from Brewfile (formulae only — casks skipped on Linux automatically)
-        run: brew bundle install --no-lock --no-upgrade
+        run: brew bundle install --no-upgrade
 
       - name: Verify symlinks can be created
         run: |
