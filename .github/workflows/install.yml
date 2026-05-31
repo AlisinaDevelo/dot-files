@@ -1,0 +1,66 @@
+name: Install test
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Homebrew (with cache)
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Install from Brewfile
+        run: brew bundle install --no-lock --no-upgrade
+
+      - name: Verify symlinks can be created
+        run: |
+          mkdir -p /tmp/test-symlinks
+          ln -sf "$PWD/nvim"                 /tmp/test-symlinks/nvim
+          ln -sf "$PWD/git/.gitconfig"       /tmp/test-symlinks/.gitconfig
+          ln -sf "$PWD/zsh/.zshrc"           /tmp/test-symlinks/.zshrc
+          ln -sf "$PWD/tmux/.tmux.conf"      /tmp/test-symlinks/.tmux.conf
+          ln -sf "$PWD/alacritty/alacritty.toml" /tmp/test-symlinks/alacritty.toml
+          echo "All symlinks created successfully"
+          ls -la /tmp/test-symlinks
+
+      - name: Validate install.sh syntax
+        run: bash -n install.sh && echo "Bash syntax OK"
+
+  ubuntu:
+    name: Ubuntu (Homebrew)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Homebrew
+        run: |
+          NONINTERACTIVE=1 /bin/bash -c \
+            "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> "$GITHUB_ENV"
+
+      - name: Install from Brewfile (formulae only — casks skipped on Linux automatically)
+        run: brew bundle install --no-lock --no-upgrade
+
+      - name: Verify symlinks can be created
+        run: |
+          mkdir -p /tmp/test-symlinks
+          ln -sf "$PWD/nvim"                 /tmp/test-symlinks/nvim
+          ln -sf "$PWD/git/.gitconfig"       /tmp/test-symlinks/.gitconfig
+          ln -sf "$PWD/zsh/.zshrc"           /tmp/test-symlinks/.zshrc
+          echo "All symlinks created successfully"
+
+      - name: Validate install.sh syntax
+        run: bash -n install.sh && echo "Bash syntax OK"

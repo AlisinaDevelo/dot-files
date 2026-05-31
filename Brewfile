@@ -5,7 +5,7 @@ brew "zsh-syntax-highlighting"
 # Terminal multiplexer
 brew "tmux"
 
-# Editor
+# Editor (requires >= 0.11.2 for LazyVim)
 brew "neovim"
 
 # Git
@@ -38,8 +38,21 @@ brew "kubectx"
 brew "direnv"      # per-directory env vars
 brew "tldr"        # simplified man pages
 brew "sshs"        # SSH profile switcher
-brew "tree"        # directory tree view
 
-# Terminal & fonts
-cask "alacritty"
-cask "font-meslo-lg-nerd-font"
+# AI development tools
+brew "aider"       # AI pair programming in the terminal
+brew "llm"         # unified CLI for OpenAI, Anthropic, Ollama, and more
+
+# Skip large downloads in CI (ollama is ~2 GB)
+unless ENV["CI"]
+  brew "ollama"
+end
+
+# macOS-only: GUI apps and fonts (skipped automatically on Linux)
+# Skipped in CI to keep install times reasonable
+on_macos do
+  unless ENV["CI"]
+    cask "alacritty"
+    cask "font-meslo-lg-nerd-font"
+  end
+end

@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Neovim state (generated on first launch)
+nvim/lazy-lock.json
