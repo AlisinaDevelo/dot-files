@@ -13,7 +13,7 @@ jobs:
     name: ShellCheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ludeeus/action-shellcheck@master
         with:
           scandir: .
@@ -25,7 +25,7 @@ jobs:
     name: Lua syntax
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: sudo apt-get install -y lua5.4 -q
       - name: Check all .lua files
         run: find nvim -name "*.lua" -exec luac5.4 -p {} \; && echo "All Lua files OK"
@@ -45,7 +45,7 @@ jobs:
     name: JSON validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Validate JSON files
         run: |
           for f in windows-terminal/settings.json; do
@@ -57,7 +57,7 @@ jobs:
     name: Markdown lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: "**/*.md"
