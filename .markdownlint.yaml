@@ -1,5 +1,7 @@
 default: true
 MD013:
   line_length: 250   # tables and code snippets push lines long
+MD032: false         # lists don't always need surrounding blank lines
 MD033: false         # allow inline HTML
+MD040: false         # plain-text fenced blocks (e.g. directory trees) don't need a language
 MD041: false         # first line doesn't need to be h1

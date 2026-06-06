@@ -13,13 +13,13 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Homebrew (with cache)
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install from Brewfile
-        run: brew bundle install --no-lock --no-upgrade
+        run: brew bundle install --no-upgrade
 
       - name: Verify symlinks can be created
         run: |
@@ -42,7 +42,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Homebrew
         run: |
@@ -52,7 +52,7 @@ jobs:
           echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> "$GITHUB_ENV"
 
       - name: Install from Brewfile (formulae only — casks skipped on Linux automatically)
-        run: brew bundle install --no-lock --no-upgrade
+        run: brew bundle install --no-upgrade
 
       - name: Verify symlinks can be created
         run: |
