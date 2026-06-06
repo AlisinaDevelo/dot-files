@@ -124,6 +124,12 @@ Both scripts are **idempotent** — safe to run again after pulling updates.
 
 ```
 dotfiles/
+├── .claude/                        # Claude Code project settings
+├── .github/
+│   ├── dependabot.yml              # Weekly action version updates
+│   └── workflows/
+│       ├── ci.yml                  # Lint on every push (shellcheck, lua, json, md)
+│       └── install.yml             # Full install test on macOS + Ubuntu
 ├── alacritty/
 │   └── alacritty.toml              # Terminal — Catppuccin Mocha (macOS + Windows)
 ├── git/
@@ -137,9 +143,9 @@ dotfiles/
 │       │   ├── lazy.lua            # lazy.nvim bootstrap + extras
 │       │   └── options.lua         # Vim options
 │       └── plugins/
+│           ├── ai.lua              # Copilot + Avante (Claude / GPT / Ollama)
 │           ├── colorscheme.lua     # Catppuccin Mocha
-│           ├── editor.lua          # Harpoon2
-│           └── ai.lua              # Copilot + Avante (Claude / GPT / Ollama)
+│           └── editor.lua          # Harpoon2
 ├── powershell/
 │   └── profile.ps1                 # PowerShell — Oh My Posh, aliases, PSReadLine
 ├── tmux/
@@ -148,8 +154,12 @@ dotfiles/
 │   └── settings.json               # Windows Terminal — Catppuccin Mocha, Nerd Font
 ├── zsh/
 │   └── .zshrc                      # Zsh — Oh My Zsh, plugins, aliases
-├── Brewfile                        # macOS: Homebrew packages
-├── install.sh                      # macOS / WSL2 bootstrap script
+├── .gitignore
+├── .markdownlint.yaml
+├── .stylua.toml
+├── Brewfile                        # macOS / Linux: Homebrew packages
+├── LICENSE
+├── install.sh                      # macOS / Linux bootstrap script
 └── install.ps1                     # Windows bootstrap script
 ```
 

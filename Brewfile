@@ -48,11 +48,3 @@ unless ENV["CI"]
   brew "ollama"
 end
 
-# macOS-only: GUI apps and fonts (skipped automatically on Linux)
-# Skipped in CI to keep install times reasonable
-on_macos do
-  unless ENV["CI"]
-    cask "alacritty"
-    cask "font-meslo-lg-nerd-font"
-  end
-end

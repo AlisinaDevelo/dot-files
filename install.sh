@@ -39,8 +39,16 @@ if ! command -v brew &>/dev/null; then
     die "Homebrew not found. Install it first: https://docs.brew.sh/Homebrew-on-Linux"
   fi
 fi
-brew bundle --file="$DOTFILES/Brewfile" --no-lock
+brew bundle --file="$DOTFILES/Brewfile"
 ok "Packages installed"
+
+# macOS-only GUI apps and fonts (never runs in CI)
+if $IS_MAC && [ "${CI:-false}" != "true" ]; then
+  step "macOS casks"
+  brew install --cask alacritty            2>/dev/null || warn "alacritty: already installed or skipped"
+  brew install --cask font-meslo-lg-nerd-font 2>/dev/null || warn "font-meslo-lg-nerd-font: already installed or skipped"
+  ok "Casks done"
+fi
 
 # ── Linux: fonts ─────────────────────────────────────────────────────────────
 if $IS_LINUX; then
