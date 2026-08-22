@@ -5,22 +5,31 @@ if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
 
 # ── Environment ───────────────────────────────────────────────────────────────
 $env:EDITOR = "nvim"
-# ~/.local/bin: aider and other user-installed tools land here
-if ($env:PATH -notmatch [regex]::Escape("$HOME\.local\bin")) {
-  $env:PATH = "$HOME\.local\bin;$env:PATH"
+$env:VISUAL = $env:EDITOR
+foreach ($userBin in @(
+  "$HOME\.local\bin",
+  "$HOME\.grok\bin",
+  "$HOME\.kimi-code\bin",
+  "$HOME\.opencode\bin"
+)) {
+  if ((Test-Path -LiteralPath $userBin) -and ($env:PATH -split ";" -notcontains $userBin)) {
+    $env:PATH = "$userBin;$env:PATH"
+  }
 }
 
 # ── PSReadLine ────────────────────────────────────────────────────────────────
-Set-PSReadLineOption -EditMode Emacs
-Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle ListView
-Set-PSReadLineOption -MaximumHistoryCount 100000
-Set-PSReadLineOption -HistoryNoDuplicates
-Set-PSReadLineOption -BellStyle None
-Set-PSReadLineKeyHandler -Key Tab            -Function MenuComplete
-Set-PSReadLineKeyHandler -Key UpArrow        -Function HistorySearchBackward
-Set-PSReadLineKeyHandler -Key DownArrow      -Function HistorySearchForward
-Set-PSReadLineKeyHandler -Key ctrl+r         -Function ReverseSearchHistory
+if (Get-Command Set-PSReadLineOption -ErrorAction SilentlyContinue) {
+  Set-PSReadLineOption -EditMode Emacs
+  Set-PSReadLineOption -PredictionSource History
+  Set-PSReadLineOption -PredictionViewStyle ListView
+  Set-PSReadLineOption -MaximumHistoryCount 100000
+  Set-PSReadLineOption -HistoryNoDuplicates
+  Set-PSReadLineOption -BellStyle None
+  Set-PSReadLineKeyHandler -Key Tab            -Function MenuComplete
+  Set-PSReadLineKeyHandler -Key UpArrow        -Function HistorySearchBackward
+  Set-PSReadLineKeyHandler -Key DownArrow      -Function HistorySearchForward
+  Set-PSReadLineKeyHandler -Key ctrl+r         -Function ReverseSearchHistory
+}
 
 # ── Tool integrations ─────────────────────────────────────────────────────────
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
@@ -45,15 +54,28 @@ if (Get-Command fzf -ErrorAction SilentlyContinue) {
 }
 
 # ── Aliases: shell ────────────────────────────────────────────────────────────
-Set-Alias -Name vim -Value nvim
+if (Get-Command nvim -ErrorAction SilentlyContinue) {
+  Set-Alias -Name vim -Value nvim
+}
 
-function ls  { eza --icons @args }
-function ll  { eza -lah --icons --git @args }
-function la  { eza -a --icons @args }
-function lt  { eza --tree --icons --level=2 @args }
-function cat { bat @args }
+if (Get-Command eza -ErrorAction SilentlyContinue) {
+  foreach ($aliasName in @("ls", "ll", "la", "lt")) {
+    Remove-Item -LiteralPath "Alias:$aliasName" -Force -ErrorAction SilentlyContinue
+  }
+  function ls { eza --icons @args }
+  function ll { eza -lah --icons --git @args }
+  function la { eza -a --icons @args }
+  function lt { eza --tree --icons --level=2 @args }
+}
+if (Get-Command bat -ErrorAction SilentlyContinue) {
+  Remove-Item -LiteralPath "Alias:cat" -Force -ErrorAction SilentlyContinue
+  function cat { bat @args }
+}
 
 # ── Aliases: git ──────────────────────────────────────────────────────────────
+foreach ($aliasName in @("gs", "ga", "gc", "gp", "gl", "gco", "gd", "glg")) {
+  Remove-Item -LiteralPath "Alias:$aliasName" -Force -ErrorAction SilentlyContinue
+}
 function gs  { git status @args }
 function ga  { git add @args }
 function gc  { git commit @args }
@@ -66,3 +88,8 @@ function glg { git log --oneline --graph --decorate --all @args }
 # ── Aliases: navigation ───────────────────────────────────────────────────────
 function ..  { Set-Location .. }
 function ... { Set-Location ..\.. }
+
+$localProfile = "$HOME\.powershell.local.ps1"
+if (Test-Path -LiteralPath $localProfile) {
+  . $localProfile
+}

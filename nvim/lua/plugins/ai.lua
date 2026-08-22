@@ -1,23 +1,44 @@
+local function env(name)
+  local value = vim.env[name]
+  return value ~= nil and value ~= "" and value or nil
+end
+
+local function default_provider()
+  if env("AVANTE_PROVIDER") then
+    return env("AVANTE_PROVIDER")
+  end
+  if vim.fn.executable("opencode") == 1 then
+    return "opencode"
+  end
+  if vim.fn.executable("kimi") == 1 then
+    return "kimi-cli"
+  end
+  if env("ANTHROPIC_API_KEY") then
+    return "claude"
+  end
+  if env("OPENAI_API_KEY") then
+    return "openai"
+  end
+  return "copilot"
+end
+
 return {
-  -- GitHub Copilot: inline ghost-text completions while you type
   {
     "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
     opts = {
       suggestion = {
         enabled = true,
         auto_trigger = true,
         debounce = 75,
         keymap = {
-          accept = "<M-l>", -- Alt+l accepts the whole suggestion
-          accept_word = "<M-w>", -- Alt+w accepts one word at a time
+          accept = "<M-l>",
+          accept_word = "<M-w>",
           next = "<M-]>",
           prev = "<M-[>",
           dismiss = "<C-]>",
         },
       },
-      panel = { enabled = false }, -- use Avante for panel-style chat
+      panel = { enabled = false },
       filetypes = {
         yaml = false,
         help = false,
@@ -29,71 +50,55 @@ return {
     },
   },
 
-  -- Avante: Cursor-style AI coding assistant inside Neovim
-  -- Supports Claude (Anthropic), GPT (OpenAI), Copilot, and local Ollama models.
-  -- Set ANTHROPIC_API_KEY or OPENAI_API_KEY in your shell env.
   {
     "yetone/avante.nvim",
-    event = "VeryLazy",
-    version = false,
-    -- cross-platform build: requires `make` on macOS/Linux, PowerShell on Windows
-    build = vim.fn.has("win32") == 1 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-      or "make",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "stevearc/dressing.nvim",
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "zbirenbaum/copilot.lua",
-      {
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = { insert_mode = true },
-            use_absolute_path = true,
+    opts = function(_, opts)
+      opts.provider = default_provider()
+      opts.auto_suggestions_provider = "copilot"
+      opts.acp_providers = vim.tbl_deep_extend("force", opts.acp_providers or {}, {
+        opencode = {
+          command = env("OPENCODE_BIN") or "opencode",
+          args = { "acp" },
+        },
+        ["kimi-cli"] = {
+          command = env("KIMI_BIN") or "kimi",
+          args = { "acp" },
+        },
+      })
+      opts.providers = vim.tbl_deep_extend("force", opts.providers or {}, {
+        claude = {
+          model = env("AVANTE_CLAUDE_MODEL"),
+          timeout = 30000,
+        },
+        openai = {
+          model = env("AVANTE_OPENAI_MODEL"),
+          timeout = 30000,
+        },
+        ollama = {
+          endpoint = env("AVANTE_OLLAMA_ENDPOINT") or "http://127.0.0.1:11434",
+          model = env("AVANTE_OLLAMA_MODEL") or "qwen2.5-coder",
+          is_env_set = require("avante.providers.ollama").check_endpoint_alive,
+          extra_request_body = {
+            options = {
+              temperature = 0,
+              num_ctx = 32768,
+              keep_alive = "5m",
+            },
           },
         },
-      },
-      {
-        "MeanderingProgrammer/render-markdown.nvim",
-        opts = { file_types = { "markdown", "Avante" } },
-        ft = { "markdown", "Avante" },
-      },
-    },
-    opts = {
-      provider = "claude", -- switch with :AvanteSwitchProvider
-      auto_suggestions_provider = "copilot",
-      claude = {
-        endpoint = "https://api.anthropic.com",
-        model = "claude-sonnet-4-6", -- or claude-opus-4-7 for max quality
-        timeout = 30000,
-        temperature = 0,
-        max_tokens = 8192,
-      },
-      openai = {
-        endpoint = "https://api.openai.com/v1",
-        model = "gpt-4o",
-        timeout = 30000,
-        temperature = 0,
-        max_tokens = 8192,
-      },
-      ollama = {
-        -- local models — run: ollama pull qwen2.5-coder
-        endpoint = "http://127.0.0.1:11434",
-        model = "qwen2.5-coder",
-      },
-      behaviour = {
-        auto_suggestions = false, -- inline suggestions handled by copilot.lua
-        auto_set_keymaps = true,
+      })
+      opts.behaviour = vim.tbl_deep_extend("force", opts.behaviour or {}, {
+        auto_suggestions = false,
+        auto_set_keymaps = false,
         auto_apply_diff_after_generation = false,
+        auto_approve_tool_permissions = false,
         support_paste_from_clipboard = true,
-      },
-      hints = { enabled = true },
-      windows = {
+      })
+      opts.selection = vim.tbl_deep_extend("force", opts.selection or {}, {
+        hint_display = "none",
+      })
+      opts.hints = { enabled = true }
+      opts.windows = vim.tbl_deep_extend("force", opts.windows or {}, {
         position = "right",
         wrap = true,
         width = 32,
@@ -101,11 +106,13 @@ return {
         input = { prefix = "> ", height = 8 },
         edit = { border = "rounded", start_insert = true },
         ask = { floating = false, start_insert = true, border = "rounded" },
-      },
-    },
+      })
+    end,
     keys = {
       { "<leader>aa", "<cmd>AvanteAsk<cr>", desc = "AI: ask", mode = { "n", "v" } },
       { "<leader>ae", "<cmd>AvanteEdit<cr>", desc = "AI: edit selection", mode = { "n", "v" } },
+      { "<leader>am", "<cmd>AvanteModels<cr>", desc = "AI: choose model" },
+      { "<leader>ap", "<cmd>AvanteSwitchProvider<cr>", desc = "AI: choose provider" },
       { "<leader>ar", "<cmd>AvanteRefresh<cr>", desc = "AI: refresh" },
       { "<leader>at", "<cmd>AvanteToggle<cr>", desc = "AI: toggle sidebar" },
       { "<leader>ac", "<cmd>AvanteClear<cr>", desc = "AI: clear chat" },

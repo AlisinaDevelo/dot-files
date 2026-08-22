@@ -1,0 +1,7 @@
+# Copy relevant values into ~/.gitconfig.local. Never commit that local file.
+[user]
+	name = Your Name
+	email = you@example.com
+
+# Configure GitHub credentials on each machine with:
+# GIT_CONFIG_GLOBAL="$HOME/.gitconfig.local" gh auth setup-git

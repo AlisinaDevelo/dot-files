@@ -30,6 +30,15 @@ brew "jq"          # JSON processor
 brew "curl"
 brew "wget"
 
+# Local quality and security pipeline
+brew "lua"
+brew "shellcheck"
+brew "shfmt"
+brew "stylua"
+brew "markdownlint-cli2"
+brew "taplo"
+brew "gitleaks"
+
 # DevOps / infra
 brew "kubernetes-cli"
 brew "kubectx"
@@ -43,8 +52,7 @@ brew "sshs"        # SSH profile switcher
 brew "aider"       # AI pair programming in the terminal
 brew "llm"         # unified CLI for OpenAI, Anthropic, Ollama, and more
 
-# Skip large downloads in CI (ollama is ~2 GB)
-unless ENV["CI"]
+# Skip large downloads in intentionally minimal environments.
+unless ENV["DOTFILES_MINIMAL"]
   brew "ollama"
 end
-

@@ -1,6 +1,5 @@
-[user]
-	name = Your Name
-	email = your@email.com
+[include]
+	path = ~/.gitconfig.local
 
 [core]
 	editor = nvim

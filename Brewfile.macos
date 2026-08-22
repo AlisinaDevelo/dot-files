@@ -1,0 +1,4 @@
+# macOS-only applications and fonts.
+cask "alacritty"
+cask "font-meslo-lg-nerd-font"
+cask "copilot-cli"

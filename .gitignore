@@ -2,5 +2,9 @@
 .DS_Store
 **/.DS_Store
 
-# Neovim state (generated on first launch)
-nvim/lazy-lock.json
+# Machine-local configuration and credentials
+.env
+.env.*
+!.env.example
+*.local
+nvim/.neoconf.json

@@ -17,17 +17,6 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    -- Picker: Telescope (overrides the default snacks picker)
-    { import = "lazyvim.plugins.extras.editor.telescope" },
-    -- Language support
-    { import = "lazyvim.plugins.extras.lang.typescript" },
-    { import = "lazyvim.plugins.extras.lang.json" },
-    { import = "lazyvim.plugins.extras.lang.markdown" },
-    -- Formatting
-    { import = "lazyvim.plugins.extras.formatting.prettier" },
-    -- Smooth animations
-    { import = "lazyvim.plugins.extras.ui.mini-animate" },
-    -- Local overrides and additions
     { import = "plugins" },
   },
   defaults = {
@@ -36,6 +25,7 @@ require("lazy").setup({
   },
   install = { colorscheme = { "catppuccin", "tokyonight", "habamax" } },
   checker = { enabled = true, notify = false },
+  git = { timeout = 300 },
   performance = {
     rtp = {
       disabled_plugins = { "gzip", "tarPlugin", "tohtml", "tutor", "zipPlugin" },

@@ -1,0 +1,15 @@
+# Immutable upstream revisions used by install.sh.
+OH_MY_ZSH_REPO=https://github.com/ohmyzsh/ohmyzsh.git
+OH_MY_ZSH_REF=d42209f2afa8ec3e6971e5b4695ff27f9d5670d2
+
+POWERLEVEL10K_REPO=https://github.com/romkatv/powerlevel10k.git
+POWERLEVEL10K_REF=3308262dfbd743b6e1d3956a2b5572f7a049d692
+
+TPM_REPO=https://github.com/tmux-plugins/tpm.git
+TPM_REF=e261deb1b47614eed3400089ce7197dc68acc4eb
+
+FONT_BASE_URL=https://raw.githubusercontent.com/ryanoasis/nerd-fonts/b894ea7803af6aade63d60a4381e006098ec9c4d/patched-fonts/Meslo/S
+FONT_REGULAR_SHA256=f3148b1e05c1dcf86785020d1d144524b9458deaab17505b88ecfe1694543214
+FONT_BOLD_SHA256=63ff060fbe6db68ee719137640217f28da72fb1b78c1c41f254451f3fca1f236
+FONT_ITALIC_SHA256=998207ee63e0d2cd1490616f08a1bbfe217bd4ecf94060119048ab1e932d45bf
+FONT_BOLD_ITALIC_SHA256=cb2a9fcbc8cbd587378035a46c0dac2c9490946b67b4ab91b3230559b5cc74e9
