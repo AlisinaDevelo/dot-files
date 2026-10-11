@@ -4,6 +4,8 @@ set -u
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 failures=0
 warnings=0
+CODEX_DIR="${CODEX_HOME:-$HOME/.codex}"
+CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
 ok() { printf 'OK    %s\n' "$1"; }
 warn() {
@@ -97,6 +99,14 @@ check_link "$ROOT/nvim" "$HOME/.config/nvim"
 check_link "$ROOT/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
 if [ -L "$HOME/.config/nvim/nvim" ]; then
   fail "$HOME/.config/nvim/nvim is a nested link left by an older installer"
+fi
+
+printf '\n[Agent instructions]\n'
+check_link "$ROOT/ai/AGENTS.md" "$CODEX_DIR/AGENTS.md"
+check_link "$ROOT/ai/AGENTS.md" "$CLAUDE_DIR/AGENTS.md"
+check_link "$ROOT/ai/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
+if [ -s "$CODEX_DIR/AGENTS.override.md" ]; then
+  warn "$CODEX_DIR/AGENTS.override.md takes precedence over the shared instructions"
 fi
 
 printf '\n[Pinned shell sources]\n'

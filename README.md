@@ -52,7 +52,7 @@ The PowerShell installer never downloads and executes a package-manager bootstra
 | Multiplexer | `tmux/` | Vim navigation, persistence, guarded TPM startup |
 | Git | `git/` | Delta, rebase workflow, aliases, machine-local identity include |
 | Editor | `nvim/` | LazyVim, 64 locked plugins, polyglot LSP/test/formatting support |
-| AI | `nvim/lua/plugins/ai.lua` | Copilot completion; Avante with OpenCode, Kimi, Claude, OpenAI, Ollama, or Copilot |
+| AI | `ai/`, `nvim/lua/plugins/ai.lua` | Shared coding-agent instructions; Copilot completion and Avante providers |
 | Verification | `scripts/`, `.githooks/` | Syntax, formatting, native parsers, installer tests, secret scanning, clean-clone test |
 
 ## Safety Model
@@ -62,7 +62,7 @@ The PowerShell installer never downloads and executes a package-manager bootstra
 3. Explicit backup mode moves conflicts to timestamped paths before creating links.
 4. Oh My Zsh, Powerlevel10k, and TPM are installed at immutable Git revisions.
 5. Linux font downloads use immutable URLs and verified SHA-256 hashes.
-6. Git identity, credentials, API keys, and host policy stay outside the public repository.
+6. Git identity, credentials, API keys, and host-specific policy stay outside the public repository.
 7. Neovim plugin revisions are committed in `nvim/lazy-lock.json`.
 
 See [Installation and Recovery](docs/INSTALL.md), [Migration](docs/MIGRATION.md), and [Supply-Chain Policy](docs/SECURITY.md) for the full operating model.
@@ -80,6 +80,13 @@ GIT_CONFIG_GLOBAL="$HOME/.gitconfig.local" gh auth setup-git
 This prevents a public dotfiles repository from carrying personal email addresses or architecture-specific credential-helper paths.
 
 ## Neovim and AI
+
+The macOS/Linux installer also installs shared personal instructions for Codex and
+Claude Code. They cover finishing authorized PRs through merge, verification,
+visual checks, public contribution etiquette, and cleanup. Claude imports the
+shared `AGENTS.md` from a short `CLAUDE.md` wrapper, so the rules stay consistent.
+See [Coding-Agent Instructions](docs/AI-INSTRUCTIONS.md) for paths, customization,
+loading checks, and the research behind the policy.
 
 The editor keeps one inline completion engine, Copilot, and one unified assistant surface, Avante. Avante chooses a provider in this order:
 
@@ -136,6 +143,7 @@ For the full workstation, use the private blueprint. It pins this repository by 
 ```text
 .
 |-- .githooks/             local pre-commit and pre-push gates
+|-- ai/                    shared Codex and Claude Code working preferences
 |-- alacritty/             portable terminal configuration
 |-- docs/                  installation, migration, editor, and security guides
 |-- git/                   public Git behavior and local-config example

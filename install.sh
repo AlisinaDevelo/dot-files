@@ -6,6 +6,8 @@ APPLY=false
 LINKS_ONLY=false
 BACKUP_EXISTING=false
 LINK_CONFLICTS=0
+CODEX_DIR="${CODEX_HOME:-$HOME/.codex}"
+CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
 usage() {
   cat <<'EOF'
@@ -271,6 +273,9 @@ show_link "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
 show_link "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig"
 show_link "$DOTFILES/nvim" "$HOME/.config/nvim"
 show_link "$DOTFILES/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+show_link "$DOTFILES/ai/AGENTS.md" "$CODEX_DIR/AGENTS.md"
+show_link "$DOTFILES/ai/AGENTS.md" "$CLAUDE_DIR/AGENTS.md"
+show_link "$DOTFILES/ai/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
 
 if ! $APPLY; then
   printf '\nPreview complete. Re-run with --apply after reviewing the plan.\n'
@@ -318,6 +323,9 @@ symlink_config "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
 symlink_config "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig"
 symlink_config "$DOTFILES/nvim" "$HOME/.config/nvim"
 symlink_config "$DOTFILES/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+symlink_config "$DOTFILES/ai/AGENTS.md" "$CODEX_DIR/AGENTS.md"
+symlink_config "$DOTFILES/ai/AGENTS.md" "$CLAUDE_DIR/AGENTS.md"
+symlink_config "$DOTFILES/ai/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
 ensure_git_local
 
 step 'Result'
